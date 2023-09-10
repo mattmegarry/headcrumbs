@@ -17,5 +17,10 @@
         "content.js"
       ]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "http-service-worker.js"
+  },
+  "permissions": ["cookies"],
+  "host_permissions": ["https://www.google.com/"]
 }

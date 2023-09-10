@@ -64,8 +64,16 @@ class SaveSelectedTooltip extends HTMLElement {
         this.shadowRoot
             .getElementById("saveSelectedBtn")
             .addEventListener("click", () => {
-                console.log("perhaps a web request here?");
-                // does the returning of this matter?
+                (async () => {
+                    const { saveSuccess, joke } = {};
+                    const res = await chrome.runtime.sendMessage({ crumbContent: "cheese" });
+                    console.log(res);
+                    if (saveSuccess) {
+                        console.log("Saved!");
+                    } else {
+                        console.log("Save Failed");
+                    }
+                })();
                 return this.highlightSelection();
             });
     }
