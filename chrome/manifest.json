@@ -1,0 +1,11 @@
+{
+  "name": "HeadCrumbs",
+  "version": "1.0.0",
+  "description": "Trace your steps, cement your knowledge",
+  "manifest_version": 3,
+  "author": "Matt Megarry",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "HeadCrumbs"
+  }
+}
