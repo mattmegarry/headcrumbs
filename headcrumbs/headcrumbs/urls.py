@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from apps.crumbs import views as crumbs
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('crumbs/', crumbs.crumb_list, name='crumb-list'),
 ]

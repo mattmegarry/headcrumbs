@@ -1,0 +1,18 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>My Crumbs</h1>
+
+<ul>
+  {% for crumb in crumbs %}
+  <li>
+    <div>
+      <p>{{ crumb.text }}</p>
+      <p>{{ crumb.url }}</p>
+    </div>
+  </li>
+  {% empty %}
+  <li>No crumbs found</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
