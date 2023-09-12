@@ -22,5 +22,5 @@
     "service_worker": "http-service-worker.js"
   },
   "permissions": ["cookies"],
-  "host_permissions": ["https://www.google.com/"]
+  "host_permissions": ["http://localhost:8000/"]
 }

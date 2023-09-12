@@ -65,13 +65,13 @@ class SaveSelectedTooltip extends HTMLElement {
             .getElementById("saveSelectedBtn")
             .addEventListener("click", () => {
                 (async () => {
-                    const { saveSuccess, joke } = {};
-                    const res = await chrome.runtime.sendMessage({ crumbContent: "cheese" });
-                    console.log(res);
+                    const saveText = document.getElementsByTagName("save-selected-tooltip")[0].getAttribute("tooltipsavetext");
+                    const url = window.location.href;
+                    const { saveSuccess, errorMessage } = await chrome.runtime.sendMessage({ text: saveText, url: url });
                     if (saveSuccess) {
                         console.log("Saved!");
                     } else {
-                        console.log("Save Failed");
+                        console.error(errorMessage);
                     }
                 })();
                 return this.highlightSelection();

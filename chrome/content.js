@@ -9,11 +9,20 @@ const setTooltipPosition = (tooltipPosition) =>
         JSON.stringify(tooltipPosition)
     );
 
+const setTooltipSaveText = (saveText) => {
+    console.log(saveText);
+    return tooltip.setAttribute(
+        "tooltipSaveText",
+        saveText
+    );
+};
+
 const getSelectedText = () => window.getSelection().toString();
 
 document.addEventListener("click", () => {
     if (getSelectedText().length > 0) {
         setTooltipPosition(getTooltipPosition());
+        setTooltipSaveText(getSelectedText());
     }
 });
 
