@@ -1,8 +1,12 @@
-from django.shortcuts import render
+from django.views.generic import ListView 
 from .models import Crumb
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-@login_required
-def crumb_list(request):
-    crumbs = Crumb.objects.filter(user=request.user)
-    return render(request, 'crumb_list.html', {'crumbs': crumbs})
+class CrumbListView(LoginRequiredMixin, ListView):
+    model = Crumb
+    template_name = 'crumb_list.html'
+    context_object_name = 'crumbs'
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+    
