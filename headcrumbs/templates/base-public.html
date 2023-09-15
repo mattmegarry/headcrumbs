@@ -9,9 +9,15 @@
   <body>
     <header>
       <div class="wrapper">
-        <div class="header">
+        <div class="header-public">
           <h1>Welcome to HeadCrumbs</h1>
-          <nav></nav>
+          <nav>
+            <ul>
+              {% if not request.user.is_authenticated %}
+              <li><a href="{% url 'login' %}">Login</a></li>
+              {% endif %}
+            </ul>
+          </nav>
         </div>
       </div>
     </header>

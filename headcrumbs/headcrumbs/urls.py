@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path
 
 from apps.cms.views import HomePageView
+from apps.users.views import LoginView, LogoutView
 from apps.crumbs.views import CrumbListView, CrumbAPIViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePageView.as_view(), name='home'),
+    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('crumbs/', CrumbListView.as_view(), name='crumbs'),
     path('api/crumbs/', CrumbAPIViewSet.as_view(), name='crumb-api'),
 ]
