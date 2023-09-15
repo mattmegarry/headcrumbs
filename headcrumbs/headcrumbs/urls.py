@@ -17,10 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from apps.cms.views import HomePageView
 from apps.crumbs.views import CrumbListView, CrumbAPIViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('crumbs/', CrumbListView.as_view(), name='crumb-list'),
+    path('', HomePageView.as_view(), name='home'),
+    path('crumbs/', CrumbListView.as_view(), name='crumbs'),
     path('api/crumbs/', CrumbAPIViewSet.as_view(), name='crumb-api'),
 ]
