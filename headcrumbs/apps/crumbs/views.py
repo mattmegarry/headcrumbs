@@ -14,7 +14,8 @@ class CrumbListView(LoginRequiredMixin, ListView):
     login_url = 'login'
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        return self.model.objects.filter(user=self.request.user).order_by('-id')
+
 
 class CrumbAPIViewSet(APIView):
 
@@ -27,3 +28,11 @@ class CrumbAPIViewSet(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
     
+class TrailsListView(LoginRequiredMixin, ListView):
+    model = Crumb
+    template_name = 'trail_list.html'
+    context_object_name = 'trails'
+    login_url = 'login'
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user).order_by('name')
