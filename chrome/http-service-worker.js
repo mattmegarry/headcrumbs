@@ -1,41 +1,48 @@
-chrome.runtime.onMessage.addListener(
-    async function (request, sender, sendResponse) {
-        if (request.text && request.url) {
-            const { text, url } = request;
+const baseUrl = "http://localhost:8000/";
 
-            const sessionid = await getCookies("http://localhost:8000/", "sessionid");
-            const csrftoken = await getCookies("http://localhost:8000/", "csrftoken");
+const apiRequest = async (path, method, data) => {
+    const sessionid = await getCookies(baseUrl, "sessionid");
+    const csrftoken = await getCookies(baseUrl, "csrftoken");
 
-
-            const baseUrl = "http://localhost:8000/api/crumbs/";
-            fetch(baseUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
-                    'Cookie': `csrftoken=${csrftoken}`,
-                    'Cookie': `sessionid=${sessionid}`
-                },
-                body: JSON.stringify({
-                    text: text,
-                    url: url
-                })
-            })
-                .then((response) => {
-                    console.log(response);
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                    sendResponse({ saveSuccess: true });
-                }).catch((error) => {
-                    sendResponse({ saveSuccess: false, errorMessage: "An API error occurred" });
-                });
-        } else {
-            sendResponse({ saveSuccess: false, errorMessage: "A client-side error occurred" });
-        }
-        return true;
+    try {
+        const response = await fetch(baseUrl + path, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+                'Cookie': `csrftoken=${csrftoken}`,
+                'Cookie': `sessionid=${sessionid}`
+            },
+            body: JSON.stringify(data)
+        });
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
     }
+}
+
+chrome.runtime.onMessage.addListener((contentScriptRequest, sender, sendResponse) => {
+    const { path, method, data } = contentScriptRequest;
+    apiRequest(path, method, data)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return null;
+            }
+        })
+        .then(data => {
+            if (data) {
+                return sendResponse({ saveSuccess: true, data: data, errorMessage: "" });
+            } else {
+                return sendResponse({ saveSuccess: false, data: null, errorMessage: "An API error occurred" });
+            }
+        }).catch(error => {
+            return sendResponse({ saveSuccess: false, data: null, errorMessage: "A client error occurred" });
+        });
+    return true;
+}
 );
 
 async function getCookies(domain, name) {

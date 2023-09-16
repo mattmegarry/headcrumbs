@@ -1,6 +1,6 @@
 from django.views.generic import ListView 
 from .models import Crumb, Trail, TrailCrumb
-from .serializers import CrumbSerializer
+from .serializers import CrumbSerializer, TrailSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework.views import APIView
@@ -15,18 +15,6 @@ class CrumbListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user).order_by('-id')
-
-
-class CrumbAPIViewSet(APIView):
-
-    permission_classes = [IsAuthenticated] 
-
-    def post(self, request):
-        serializer = CrumbSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user) 
-            return Response(serializer.data)
-        return Response(serializer.errors)
     
 class TrailsListView(LoginRequiredMixin, ListView):
     model = Trail
@@ -62,5 +50,31 @@ class UnassignedCrumbView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return self.model.objects.filter(user=self.request.user).exclude(trailcrumb__user=self.request.user).order_by('-id')
 
+class CrumbAPIViewSet(APIView):
 
+    permission_classes = [IsAuthenticated] 
+
+    def post(self, request):
+        serializer = CrumbSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user) 
+            return Response(serializer.data)
+        return Response(serializer.errors)
     
+class TrailAPIViewSet(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        trails = Trail.objects.filter(user=request.user)
+        serializer = TrailSerializer(trails, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TrailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    
+        
