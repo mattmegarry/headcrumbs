@@ -6,7 +6,7 @@
   {% for trail in trails %}
   <li>
     <div>
-      <a href="{% url 'trail' trail.slug %}">{{ trail.name }}</a>
+      <a href="{% url 'trail_crumbs' trail.slug %}">{{ trail.name }}</a>
       <p>{{ trail.url }}</p>
     </div>
   </li>

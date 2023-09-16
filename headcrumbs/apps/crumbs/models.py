@@ -15,6 +15,12 @@ class Trail(models.Model):
     slug = models.SlugField(max_length=150)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = (
+            ('name', 'user'),
+            ('slug', 'user')
+        )
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

@@ -20,7 +20,7 @@ from django.contrib.auth import views as auth_views
 
 from apps.cms.views import HomePageView
 from apps.users.views import LoginView, LogoutView
-from apps.crumbs.views import CrumbListView, CrumbAPIViewSet, TrailsListView
+from apps.crumbs.views import CrumbListView, CrumbAPIViewSet, TrailsListView, TrailCrumbView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,5 +33,6 @@ urlpatterns = [
     path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='reset-done.html'), name='password_reset_complete'),
     path('crumbs/', CrumbListView.as_view(), name='crumbs'),
     path('trails/', TrailsListView.as_view(), name='trails'),
+    path('trails/<slug:trail_slug>/', TrailCrumbView.as_view(), name='trail_crumbs'),
     path('api/crumbs/', CrumbAPIViewSet.as_view(), name='crumb-api'),
 ]

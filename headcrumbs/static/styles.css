@@ -1,5 +1,51 @@
+@import "reset.css";
+
 .wrapper {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* Layout */
+
+.nav-user,
+.control-user {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Typography */
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+/* Components */
+.crumb {
+  position: relative;
+  display: inline-block;
+  padding: 1em 1em 0 1em;
+  margin-bottom: 1em;
+  background-color: #eee;
+  border-radius: 0.5em;
+}
+
+.crumb-text {
+  margin-bottom: 1em;
+}
+
+.crumb-url-container {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 1em;
+}
+
+.crumb-url {
+  color: #000;
+  text-decoration: none;
+  font-size: smaller;
 }

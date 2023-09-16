@@ -1,14 +1,16 @@
 {% extends 'base-user.html' %} {% block content %}
 
-<h1>Recent Crumbs</h1>
+<h1>{{ trail.name }}</h1>
 
 <ul>
-  {% for crumb in crumbs %}
+  {% for trailcrumb in trail_crumbs %}
   <li>
     <div class="crumb">
-      <p class="crumb-text">{{ crumb.text }}</p>
+      <p class="crumb-text">{{ trailcrumb.crumb.text }}</p>
       <div class="crumb-url-container">
-        <a class="crumb-url" href="{{ crumb.url }}">{{ crumb.url }}</a>
+        <a class="crumb-url" href="{{ crumb.url }}"
+          >{{ trailcrumb.crumb.url }}</a
+        >
       </div>
     </div>
   </li>
