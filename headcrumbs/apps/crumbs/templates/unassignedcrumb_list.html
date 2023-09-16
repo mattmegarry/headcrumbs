@@ -1,0 +1,20 @@
+{% extends 'base-user.html' %} {% block content %}
+
+<h1>Unassigned Crumbs</h1>
+
+<ul>
+  {% for crumb in crumbs %}
+  <li>
+    <div class="crumb">
+      <p class="crumb-text">{{ crumb.text }}</p>
+      <div class="crumb-url-container">
+        <a class="crumb-url" href="{{ crumb.url }}">{{ crumb.url }}</a>
+      </div>
+    </div>
+  </li>
+  {% empty %}
+  <li>No crumbs found</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

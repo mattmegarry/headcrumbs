@@ -3,6 +3,12 @@
 <h1>Trails</h1>
 
 <ul>
+  <li>
+    <div>
+      <a href="{% url 'trail_crumbs' 'unassigned' %}">Unassigned</a>
+      <p>{{ trail.url }}</p>
+    </div>
+  </li>
   {% for trail in trails %}
   <li>
     <div>

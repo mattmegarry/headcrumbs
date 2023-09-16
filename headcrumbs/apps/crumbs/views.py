@@ -44,9 +44,7 @@ class TrailCrumbView(LoginRequiredMixin, ListView):
     login_url = 'login'
 
     def get_queryset(self):
-        qs = super().get_queryset()  
 
-        print(qs)
         return self.model.objects.filter(trail__slug=self.kwargs['trail_slug'], user=self.request.user).order_by('order')
 
     def get_context_data(self, **kwargs):
@@ -54,6 +52,15 @@ class TrailCrumbView(LoginRequiredMixin, ListView):
         context['trail'] = Trail.objects.get(slug=self.kwargs['trail_slug'], user=self.request.user)
         print(context)
         return context
+    
+class UnassignedCrumbView(LoginRequiredMixin, ListView):
+    model = Crumb
+    template_name = 'unassignedcrumb_list.html'
+    context_object_name = 'crumbs'
+    login_url = 'login'
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user).exclude(trailcrumb__user=self.request.user).order_by('-id')
 
 
     
