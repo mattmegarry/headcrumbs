@@ -11,11 +11,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": [
-        "node_modules/@webcomponents/custom-elements/custom-elements.min.js",
-        "tooltip.js",
-        "content.js"
-      ]
+      "js": ["tooltip.js"]
     }
   ],
   "background": {
