@@ -76,5 +76,15 @@ class TrailAPIViewSet(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data)
         return Response(serializer.errors)
-    
+
+class TrailCrumbAPIViewSet(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        trail = Trail.objects.get(slug=request.data['slug'], user=request.user)
+        crumb = Crumb.objects.get(id=request.data['crumbId'], user=request.user)
+        trail_crumb = TrailCrumb.objects.create(trail=trail, crumb=crumb, user=request.user)
+        trail_crumb.save()
+        return Response({'status': 'success'})
         

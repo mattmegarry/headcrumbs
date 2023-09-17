@@ -4,9 +4,9 @@ from .models import Crumb, Trail
 class CrumbSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crumb
-        fields = ['text', 'url']
+        fields = ['id', 'text', 'url']
 
 class TrailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trail
-        fields = ['name', 'slug']
+        fields = ['id', 'name', 'slug']

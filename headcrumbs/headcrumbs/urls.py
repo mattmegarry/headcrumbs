@@ -20,7 +20,7 @@ from django.contrib.auth import views as auth_views
 
 from apps.cms.views import HomePageView
 from apps.users.views import LoginView, LogoutView
-from apps.crumbs.views import CrumbListView, CrumbAPIViewSet, TrailAPIViewSet, TrailsListView, TrailCrumbView, UnassignedCrumbView
+from apps.crumbs.views import CrumbListView, CrumbAPIViewSet, TrailAPIViewSet, TrailsListView, TrailCrumbView, UnassignedCrumbView, TrailCrumbAPIViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,4 +37,5 @@ urlpatterns = [
     path('trails/<slug:trail_slug>/', TrailCrumbView.as_view(), name='trail_crumbs'),
     path('api/crumbs/', CrumbAPIViewSet.as_view(), name='crumb-api'),
     path('api/trails/', TrailAPIViewSet.as_view(), name='trail-api'),
+    path('api/trailcrumbs/', TrailCrumbAPIViewSet.as_view(), name='trailcrumb-api'),
 ]

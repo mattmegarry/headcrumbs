@@ -3,36 +3,43 @@ const tooltipHtmlString = `
             <div class="vertical-indicator" style="background-color: red; z-index: 9999; width: 5px; position: absolute;"></div>
         </template>
         <div id="headcrumbs-tooltip">
-            <p>Hello</p>
-            <button id="saveSelectedBtn">
+            <select id="trails-select" onchange="this.selectedIndex=-1">
+                <option value=""></option>
+            </select>
+            <button id="saveSelectedBtn" class="tooltip-button">
                 <svg class="text-marker" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544 512"><path d="M0 479.98L99.92 512l35.45-35.45-67.04-67.04L0 479.98zm124.61-240.01a36.592 36.592 0 0 0-10.79 38.1l13.05 42.83-50.93 50.94 96.23 96.23 50.86-50.86 42.74 13.08c13.73 4.2 28.65-.01 38.15-10.78l35.55-41.64-173.34-173.34-41.52 35.44zm403.31-160.7l-63.2-63.2c-20.49-20.49-53.38-21.52-75.12-2.35L190.55 183.68l169.77 169.78L530.27 154.4c19.18-21.74 18.15-54.63-2.35-75.13z"></path></svg>
             </button>
-            <button id="saveAndCloseTabBtn">Save & Close tab</button>
+            <button id="saveAndCloseTabBtn" class="tooltip-button">Save & Close</button>
         </div>
 `;
 
 const styled = ({ display = "none", left = 0, top = 0 }) => `
-  #saveSelectedBtn {
-    align-items: center;
-    background-color: black;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    display: ${display};
-    justify-content: center;
-    left: ${left}px;
-    padding: 5px 10px;
-    position: fixed;
-    top: ${top}px;
-    width: 40px;
-    z-index: 9999;
-  }
-  .text-marker {
-    fill: white;
-  }
-  .text-marker:hover {
-    fill: red;
-  }
+    #headcrumbs-tooltip {
+        align-items: center;
+        background-color: black;
+        border-radius: 5px;
+        border: none;
+        z-index: 9999;
+        display: ${display};
+        justify-content: center;
+        left: ${left}px;
+        padding: 5px 10px;
+        position: fixed;
+        top: ${top}px;
+    }
+    #saveSelectedBtn {
+        
+    }
+    .tooltip-button {
+        cursor: pointer;
+        width: 40px;
+    }
+    .text-marker {
+        fill: white;
+    }
+    .text-marker:hover {
+        fill: red;
+    }
 `;
 
 const tooltipContainer = document.createElement("div");
@@ -109,9 +116,15 @@ const apiRequests = {
     saveCrumb: () => {
         const saveText = tooltipContainer.shadowRoot.getElementById("headcrumbs-tooltip").getAttribute("tooltipsavetext");
         const url = window.location.href;
+        const trailSlug = tooltipContainer.shadowRoot.getElementById("trails-select").value;
         chrome.runtime.sendMessage({ path: "api/crumbs/", method: "POST", data: { text: saveText, url: url } }, function (response) {
-            const { saveSuccess, data, errorMessage } = response;
-            if (saveSuccess) {
+            const { success, data, errorMessage } = response;
+            if (success) {
+                if (trailSlug) {
+                    const crumb = data;
+                    apiRequests.saveTrailCrumb(crumb.id, trailSlug);
+                }
+                console.log(data);
                 console.log("Saved!");
             } else {
                 console.error(errorMessage);
@@ -119,6 +132,37 @@ const apiRequests = {
         });
         placeSavedSelectionIndicator();
     },
+    saveTrailCrumb: (crumbId, trailSlug) => {
+        chrome.runtime.sendMessage({ path: "api/trailcrumbs/", method: "POST", data: { crumbId: crumbId, slug: trailSlug } }, function (response) {
+            const { success, data, errorMessage } = response;
+            if (success) {
+                console.log(data);
+                console.log("TrailCrumb Saved!");
+            } else {
+                console.error(errorMessage);
+            }
+        });
+    },
+    getTrails: () => {
+        const url = window.location.href;
+        chrome.runtime.sendMessage({ path: "api/trails/", method: "GET", data: { url: url } }, function (response) {
+            const { success, data, errorMessage } = response;
+            if (success) {
+                const select = tooltipContainer.shadowRoot.getElementById("trails-select");
+                const options = data;
+                options.forEach(option => {
+                    const optionText = option.name;
+                    const optionValue = option.slug;
+                    select.add(new Option(optionText, optionValue));
+                });
+                console.log("Got them!");
+            } else {
+                console.error(errorMessage);
+            }
+        });
+    }
 }
 
 tooltipContainer.shadowRoot.getElementById("saveSelectedBtn").addEventListener("click", apiRequests.saveCrumb)
+
+apiRequests.getTrails();

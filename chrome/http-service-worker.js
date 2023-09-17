@@ -4,17 +4,22 @@ const apiRequest = async (path, method, data) => {
     const sessionid = await getCookies(baseUrl, "sessionid");
     const csrftoken = await getCookies(baseUrl, "csrftoken");
 
+    const options = {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+            'Cookie': `csrftoken=${csrftoken}`,
+            'Cookie': `sessionid=${sessionid}`
+        },
+    };
+
+    if (method === "POST" && data) {
+        options.body = JSON.stringify(data);
+    }
+
     try {
-        const response = await fetch(baseUrl + path, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-                'Cookie': `csrftoken=${csrftoken}`,
-                'Cookie': `sessionid=${sessionid}`
-            },
-            body: JSON.stringify(data)
-        });
+        const response = await fetch(baseUrl + path, options);
         return response;
     } catch (error) {
         console.log(error);
@@ -34,12 +39,12 @@ chrome.runtime.onMessage.addListener((contentScriptRequest, sender, sendResponse
         })
         .then(data => {
             if (data) {
-                return sendResponse({ saveSuccess: true, data: data, errorMessage: "" });
+                return sendResponse({ success: true, data: data, errorMessage: "" });
             } else {
-                return sendResponse({ saveSuccess: false, data: null, errorMessage: "An API error occurred" });
+                return sendResponse({ success: false, data: null, errorMessage: "An API error occurred" });
             }
         }).catch(error => {
-            return sendResponse({ saveSuccess: false, data: null, errorMessage: "A client error occurred" });
+            return sendResponse({ success: false, data: null, errorMessage: "A client error occurred" });
         });
     return true;
 }
