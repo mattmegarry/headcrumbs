@@ -10,7 +10,6 @@ const setTooltipPosition = (tooltipPosition) =>
     );
 
 const setTooltipSaveText = (saveText) => {
-    console.log(saveText);
     return tooltip.setAttribute(
         "tooltipSaveText",
         saveText
@@ -24,6 +23,7 @@ document.addEventListener("click", () => {
         setTooltipPosition(getTooltipPosition());
         setTooltipSaveText(getSelectedText());
     }
+    console.log(tooltip["tooltipPosition"]);
 });
 
 document.addEventListener("selectionchange", () => {
@@ -44,3 +44,4 @@ function getTooltipPosition() {
         display: "flex",
     };
 }
+
