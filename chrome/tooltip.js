@@ -3,15 +3,23 @@ const tooltipHtmlString = `
             <div class="vertical-indicator" style="background-color: red; z-index: 9999; width: 5px; position: absolute;"></div>
         </template>
         <div id="headcrumbs-tooltip">
-            <select id="trails-select" onchange="this.selectedIndex=-1">
+            <select id="trails-select" onchange="this.selectedIndex=-1" class="tooltip-element">
                 <option value=""></option>
             </select>
-            <button id="saveSelectedBtn" class="tooltip-button">
-                <svg class="text-marker" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 544 512"><path d="M0 479.98L99.92 512l35.45-35.45-67.04-67.04L0 479.98zm124.61-240.01a36.592 36.592 0 0 0-10.79 38.1l13.05 42.83-50.93 50.94 96.23 96.23 50.86-50.86 42.74 13.08c13.73 4.2 28.65-.01 38.15-10.78l35.55-41.64-173.34-173.34-41.52 35.44zm403.31-160.7l-63.2-63.2c-20.49-20.49-53.38-21.52-75.12-2.35L190.55 183.68l169.77 169.78L530.27 154.4c19.18-21.74 18.15-54.63-2.35-75.13z"></path></svg>
+            <button id="saveSelectedBtn" class="tooltip-button tooltip-element">
+                <svg viewBox="187.9315 171.5395 88.3089 115.8999" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+                    <path d="M 209.759 268.745 H 284.362 L 284.362 252.245 L 314.362 277.245 L 284.362 302.245 L 284.362 285.745 H 209.759 V 268.745 Z" style="fill: rgb(255, 255, 255); stroke: rgb(255, 255, 255);" transform="matrix(0.4077779948711395, -0.9130810499191284, 0.9130810499191284, 0.4077779948711395, -127.92376708984375, 355.71759033203125)" bx:shape="arrow 209.759 252.245 104.603 50 17 30 0 1@053f64a8"/>
+                </svg>
             </button>
-            <button id="saveAndCloseTabBtn" class="tooltip-button">Save & Close</button>
+            <button id="saveAndCloseTabBtn" class="tooltip-button tooltip-element">
+                <svg viewBox="187.9315 171.5395 88.3089 115.8999" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+                    <path d="M 209.759 268.745 H 284.362 L 284.362 252.245 L 314.362 277.245 L 284.362 302.245 L 284.362 285.745 H 209.759 V 268.745 Z" style="stroke: rgb(255, 255, 255); fill: rgb(255, 255, 255);" transform="matrix(0.4077779948711395, -0.9130810499191284, 0.9130810499191284, 0.4077779948711395, -127.92376708984375, 355.71759033203125)" bx:shape="arrow 209.759 252.245 104.603 50 17 30 0 1@053f64a8"/>
+                    <path d="M 146.309 174.324 H 155.758 V 193.224 H 174.659 V 202.673 H 155.758 V 221.574 H 146.309 V 202.673 H 127.409 V 193.224 H 146.309 Z" style="fill: rgb(255, 255, 255); paint-order: fill; stroke: rgb(0, 0, 0); stroke-width: 2px; transform-origin: 151.034px 197.949px;" transform="matrix(0.354649066925, 0.934999108315, -0.934999108315, 0.354649066925, 79.166974866732, 35.589926523147)" bx:shape="cross 127.409 174.324 47.25 47.25 9.449 9.449 0.5 1@3143f1b5"/>
+                </svg>
+            </button>
         </div>
 `;
+
 
 const styled = ({ display = "none", left = 0, top = 0 }) => `
     #headcrumbs-tooltip {
@@ -27,12 +35,24 @@ const styled = ({ display = "none", left = 0, top = 0 }) => `
         position: fixed;
         top: ${top}px;
     }
-    #saveSelectedBtn {
-        
+    #trails-select {
+        width: 100px;
+        color: palegreen;
+        border: solid 2px purple;
+        border-radius: 5px;
+        background-color: transparent;
     }
+    .tooltip-element {
+        border: none;
+        margin-right: 20px;
+    }
+    .tooltip-element:last-child {
+        margin-right: 0;
+    } 
     .tooltip-button {
         cursor: pointer;
         width: 40px;
+        background-color: transparent;
     }
     .text-marker {
         fill: white;
