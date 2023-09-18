@@ -101,4 +101,10 @@ class TrailCrumbAPIViewSet(APIView):
 
         trail_crumb.save()
         return Response({'status': 'success'})
+    
+    def put(self, request):
+        trail_crumb = TrailCrumb.objects.get(id=request.data['trailCrumbId'], user=request.user)
+        trail_crumb.order = request.data['order']
+        trail_crumb.save()
+        return Response({'status': 'success'})
         
