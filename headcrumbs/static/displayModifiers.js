@@ -13,4 +13,6 @@ const toggleCrumbUrls = () => {
         });
     }
     showCrumbUrls = !showCrumbUrls;
+    const toggleButton = document.getElementById('toggle-crumb-urls');
+    toggleButton.innerText = showCrumbUrls ? 'Hide URLs' : 'Show URLs';
 }

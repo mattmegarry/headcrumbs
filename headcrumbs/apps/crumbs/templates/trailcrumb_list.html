@@ -1,7 +1,7 @@
 {% extends 'base-user.html' %} {% block content %}
 
 <h1>{{ trail.name }}</h1>
-<button onclick="toggleCrumbUrls()">Toggle Urls</button>
+<button id="toggle-crumb-urls" onclick="toggleCrumbUrls()">Hide URLs</button>
 <ul>
   {% for trailcrumb in trail_crumbs %}
   <li>
