@@ -2,6 +2,7 @@ from django.views.generic import ListView
 from .models import Crumb, Trail, TrailCrumb
 from .serializers import CrumbSerializer, TrailSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Max
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -84,7 +85,20 @@ class TrailCrumbAPIViewSet(APIView):
     def post(self, request):
         trail = Trail.objects.get(slug=request.data['slug'], user=request.user)
         crumb = Crumb.objects.get(id=request.data['crumbId'], user=request.user)
-        trail_crumb = TrailCrumb.objects.create(trail=trail, crumb=crumb, user=request.user)
+        max_order = TrailCrumb.objects.filter(trail=trail).aggregate(Max('order'))['order__max']
+
+        if max_order is None:  
+            new_order = 1
+        else:
+            new_order = max_order + 1
+    
+        trail_crumb = TrailCrumb.objects.create(
+            trail=trail, 
+            crumb=crumb, 
+            user=request.user,
+            order=new_order  
+        )
+
         trail_crumb.save()
         return Response({'status': 'success'})
         

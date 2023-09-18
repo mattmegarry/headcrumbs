@@ -3,7 +3,7 @@ const tooltipHtmlString = `
             <div class="vertical-indicator" style="background-color: red; z-index: 9999; width: 5px; position: absolute;"></div>
         </template>
         <div id="headcrumbs-tooltip">
-            <select id="trails-select" onchange="this.selectedIndex=-1" class="tooltip-element">
+            <select id="trails-select" class="tooltip-element">
                 <option value=""></option>
             </select>
             <button id="saveSelectedBtn" class="tooltip-button tooltip-element">
@@ -137,6 +137,7 @@ const apiRequests = {
         const saveText = tooltipContainer.shadowRoot.getElementById("headcrumbs-tooltip").getAttribute("tooltipsavetext");
         const url = window.location.href;
         const trailSlug = tooltipContainer.shadowRoot.getElementById("trails-select").value;
+        console.log(trailSlug);
         chrome.runtime.sendMessage({ path: "api/crumbs/", method: "POST", data: { text: saveText, url: url } }, function (response) {
             const { success, data, errorMessage } = response;
             if (success) {

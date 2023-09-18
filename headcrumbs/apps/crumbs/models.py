@@ -37,3 +37,4 @@ class TrailCrumb(models.Model):
 
     class Meta:
         ordering = ['trail', 'order']
+        unique_together = ['trail', 'order']
