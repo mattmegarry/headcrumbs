@@ -50,6 +50,14 @@ chrome.runtime.onMessage.addListener((contentScriptRequest, sender, sendResponse
 }
 );
 
+chrome.runtime.onMessage.addListener(message => {
+    if (message.closeCurrentTab) {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            chrome.tabs.remove(tabs[0].id);
+        });
+    }
+});
+
 async function getCookies(domain, name) {
     const cookie = await chrome.cookies.get({ url: domain, name: name });
     return cookie.value;

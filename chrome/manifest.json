@@ -15,8 +15,8 @@
     }
   ],
   "background": {
-    "service_worker": "http-service-worker.js"
+    "service_worker": "background.js"
   },
-  "permissions": ["cookies"],
+  "permissions": ["cookies", "activeTab", "tabs"],
   "host_permissions": ["http://localhost:8000/"]
 }

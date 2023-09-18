@@ -152,6 +152,26 @@ const apiRequests = {
         });
         placeSavedSelectionIndicator();
     },
+    saveCrumbCloseTab: () => {
+        const saveText = tooltipContainer.shadowRoot.getElementById("headcrumbs-tooltip").getAttribute("tooltipsavetext");
+        const url = window.location.href;
+        const trailSlug = tooltipContainer.shadowRoot.getElementById("trails-select").value;
+        chrome.runtime.sendMessage({ path: "api/crumbs/", method: "POST", data: { text: saveText, url: url } }, function (response) {
+            const { success, data, errorMessage } = response;
+            if (success) {
+                if (trailSlug) {
+                    const crumb = data;
+                    apiRequests.saveTrailCrumb(crumb.id, trailSlug);
+                }
+                console.log(data);
+                console.log("Saved!");
+                chrome.runtime.sendMessage({ closeCurrentTab: true });
+            } else {
+                console.error(errorMessage);
+            }
+        });
+        placeSavedSelectionIndicator();
+    },
     saveTrailCrumb: (crumbId, trailSlug) => {
         chrome.runtime.sendMessage({ path: "api/trailcrumbs/", method: "POST", data: { crumbId: crumbId, slug: trailSlug } }, function (response) {
             const { success, data, errorMessage } = response;
@@ -183,6 +203,7 @@ const apiRequests = {
     }
 }
 
-tooltipContainer.shadowRoot.getElementById("saveSelectedBtn").addEventListener("click", apiRequests.saveCrumb)
+tooltipContainer.shadowRoot.getElementById("saveSelectedBtn").addEventListener("click", apiRequests.saveCrumb);
+tooltipContainer.shadowRoot.getElementById("saveAndCloseTabBtn").addEventListener("click", apiRequests.saveCrumbCloseTab);
 
 apiRequests.getTrails();
