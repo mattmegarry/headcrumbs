@@ -103,17 +103,44 @@ const getSelectedText = () => {
     return window.getSelection().toString();
 }
 
+let tooltipActive = true;
+
 document.addEventListener("click", () => {
-    if (getSelectedText().length > 0) {
+    if (tooltipActive && getSelectedText().length > 0) {
         tooltipDisplay(getTooltipShowStyles());
         setTooltipSaveText(getSelectedText());
     }
 });
 
 document.addEventListener("selectionchange", () => {
-    if (getSelectedText().length === 0) {
+    if (tooltipActive && getSelectedText().length === 0) {
         tooltipDisplay({ display: "none" });
         setTooltipSaveText("");
+    }
+});
+
+let hKeyCount = 0;
+let hKeyTimer;
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'h') {
+        hKeyCount++;
+        clearTimeout(hKeyTimer);
+        hKeyTimer = setTimeout(() => {
+            hKeyCount = 0;
+        }, 500);
+        if (hKeyCount === 3) {
+            tooltipActive = !tooltipActive;
+            console.log(`HeadCrumbs is ${tooltipActive ? "active" : "inactive"}`);
+            if (!tooltipActive) {
+                tooltipDisplay({ display: "none" });
+                setTooltipSaveText("");
+            }
+            if (tooltipActive && getSelectedText().length > 0) {
+                tooltipDisplay(getTooltipShowStyles());
+                setTooltipSaveText(getSelectedText());
+            }
+        }
     }
 });
 
