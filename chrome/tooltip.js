@@ -20,8 +20,16 @@ const tooltipHtmlString = `
         </div>
 `;
 
+const notificationHtmlString = `
+        <div id="headcrumbs-activated" class="headcrumbs-notification">
+            <p>Headcrumbs <span id="headcrumbs-mode" style="color: palegreen;">Activated</span></p>
+        </div>
+        <div id="headcrumbs-deactivated" class="headcrumbs-notification">
+            <p>Headcrumbs <span id="headcrumbs-mode" style="color: purple;">Deactivated</span></p>
+        </div>
+`;
 
-const styled = ({ display = "none", left = 0, top = 0 }) => `
+const styledTooltip = ({ display = "none", left = 0, top = 0 }) => `
     #headcrumbs-tooltip {
         align-items: center;
         background-color: black;
@@ -62,20 +70,62 @@ const styled = ({ display = "none", left = 0, top = 0 }) => `
     }
 `;
 
+const styledNotification = ({ display = "none" }) => `
+    .headcrumbs-notification {
+        font-family: sans-serif;
+        color: white;
+        align-items: center;
+        background-color: black;
+        border-radius: 5px;
+        border: none;
+        z-index: 9999;
+        display: ${display};
+        justify-content: center;
+        left: 20px;
+        padding: 5px 10px;
+        position: fixed;
+        bottom: 20px;
+    }
+    .headcrumbs-notification p {
+        font-weight: bolder; 
+        text-decoration: underline white;
+        text-underline-offset: 8px; 
+        text-decoration-thickness: 2px;
+        margin-top: 8px;
+    }
+`;
+
 const tooltipContainer = document.createElement("div");
 const tooltipFragment = document.createRange().createContextualFragment(tooltipHtmlString);
 tooltipContainer.attachShadow({ mode: "open" });
 const style = document.createElement("style");
-style.textContent = styled({});
+style.textContent = styledTooltip({});
 tooltipContainer.shadowRoot.appendChild(style);
 tooltipContainer.shadowRoot.appendChild(tooltipFragment);
 document.body.appendChild(tooltipContainer);
+
+const notificationContainer = document.createElement("div");
+const notificationFragment = document.createRange().createContextualFragment(notificationHtmlString);
+notificationContainer.attachShadow({ mode: "open" });
+const notificationStyle = document.createElement("style");
+notificationStyle.textContent = styledNotification({});
+notificationContainer.shadowRoot.appendChild(notificationStyle);
+notificationContainer.shadowRoot.appendChild(notificationFragment);
+document.body.appendChild(notificationContainer);
 
 console.log('HeadCrumbs is active - Trace your steps, cement your knowledge');
 
 const tooltipDisplay = (newStyles) => {
     const styleElement = tooltipContainer.shadowRoot.querySelector("style");
-    styleElement.textContent = styled(newStyles);
+    styleElement.textContent = styledTooltip(newStyles);
+}
+
+const showNotification = (elementId) => {
+    const notification = notificationContainer.shadowRoot.getElementById(elementId);
+    notification.style.display = "flex";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 750);
 }
 
 const setTooltipSaveText = (saveText) => {
@@ -135,10 +185,14 @@ document.addEventListener('keydown', (event) => {
             if (!tooltipActive) {
                 tooltipDisplay({ display: "none" });
                 setTooltipSaveText("");
+                showNotification('headcrumbs-deactivated');
             }
             if (tooltipActive && getSelectedText().length > 0) {
                 tooltipDisplay(getTooltipShowStyles());
                 setTooltipSaveText(getSelectedText());
+            }
+            if (tooltipActive) {
+                showNotification('headcrumbs-activated');
             }
         }
     }
